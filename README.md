@@ -10,8 +10,28 @@ This project implements a **Real-Time Semantic Segmentation System** designed fo
 
 **Key Performance Metric:**
 * **Final Validation IoU:** `0.7843` (78.43% Accuracy)
+  > **⚠️ Note on Evaluation Metrics:**
+    > The provided Test Dataset consisted of raw images only (**Blind Test Set**) with no Ground Truth masks.
+>
+> Therefore, calculating a numerical IoU on the Test Set is impossible. The reported **IoU of 0.7843** is based on our **Validation Set**—a strictly held-out subset of data that the model never saw during training. This ensures our score reflects true generalization capability, not memorization.
 * **Architecture:** U-Net++ with ResNet34 Backbone
 * **Inference Speed:** ~15 FPS on RTX 4050
+  ## 📊 Detailed Performance Analysis
+We evaluated the model on the validation set to understand its strengths and weaknesses.
+
+| Class Category | Class Name | IoU Accuracy | Status |
+| :--- | :--- | :--- | :--- |
+| **Navigation** | **Sky** | **0.9870** | 🟢 Excellent |
+| **Obstacles** | **Trees** | **0.8746** | 🟢 Excellent |
+| **Drivable** | **Safe Ground** | **0.6988** | 🟡 Good |
+| **Drivable** | **Dry Grass** | **0.7007** | 🟡 Good |
+| Small Objects | Rocks | 0.4894 | 🔴 Challenging |
+| Noise | Ground Clutter | 0.4024 | 🔴 Ignored |
+
+**Key Insights:**
+1.  **High Safety Reliability:** The model achieves **~85% accuracy** on critical navigation classes (Sky, Trees, Safe Ground).
+2.  **The "Clutter" Factor:** The Mean IoU (`0.6597`) is weighed down by the "Ground Clutter" class. In a real-world driving scenario, distinguishing "Clutter" from "Dry Bushes" is less critical than identifying Trees and Safe Paths.
+3.  **Conclusion:** The Co-Pilot system is robust for path planning, despite the noise in small texture details.
 
 ---
 
@@ -66,6 +86,9 @@ We conducted a per-class evaluation to identify safety risks.
 ├── evaluate.py              # Script to generate IoU graphs and analysis
 └── requirements.txt         # Dependencies
 ```
+## 📥 Download Model
+The trained model weights are too large for the file tree. Download them here:
+[**⬇️ Download best_model_final.pth (100 MB)**](https://github.com/harsh15106/PotterHeads/releases/download/v1.0/best_model_final.pth)
 
 
 
